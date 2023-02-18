@@ -8,7 +8,7 @@
   "email": "E-posta adresi",
   "confirmemail": "E-posta adresi doğrula",
   "usernamephoneoremail": "Kullanıcı adı, telefon numarası veya e-posta",
-  "name": "İsim",
+  "fullname": "Ad Soyad",
   "phonenumber": "Telefon numarası",
   "welcomeback": "Yeniden hoşgeldiniz",
   "createaccount": "Hesap oluşturun",

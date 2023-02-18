@@ -45,6 +45,13 @@ const Regions = {
         preferredLanguage: "en",
         dialCode: "+1"
     },
+    es: { 
+        icon: (props) => { return <ES style={{ width: props.width, height: props.width, fontSize: "1.2rem", borderRadius: "100%", 
+            borderColor: props.theme.palette.primary.contrastText, borderWidth: props.borderWidth, borderStyle: "solid" }}></ES> },
+        name: "España",
+        preferredLanguage: "es",
+        dialCode: "+34"
+    },
     gb: { 
         icon: (props) => { return <GB style={{ width: props.width, height: props.width, fontSize: "1.2rem", borderRadius: "100%", 
             borderColor: props.theme.palette.primary.contrastText, borderWidth: props.borderWidth, borderStyle: "solid" }}></GB> },

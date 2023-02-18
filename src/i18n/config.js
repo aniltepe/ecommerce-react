@@ -12,6 +12,9 @@ i18n.use(initReactI18next).init({
     en: {
       translations: require('./locales/en.json')
     },
+    es: {
+      translations: require('./locales/es.json')
+    },
     fr: {
       translations: require('./locales/fr.json')
     },

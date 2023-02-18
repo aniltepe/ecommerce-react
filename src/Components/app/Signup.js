@@ -22,7 +22,7 @@ function Signup(props) {
     const navigate = useNavigate();
     const theme = useTheme();
     const [control, setControl] = React.useState({
-        signupname: { id: "signupname", label: t("name"), rules: { } },
+        signupfullname: { id: "signupfullname", label: t("fullname"), rules: { } },
         signupusername: { id: "signupusername", label: t("username"), requiredLabel: true, rules: { required: true, minlength: 4, maxlength: 30, uniquefuncimmdt: checkusername, allowedchars: [".", "_"] } },
         signupemail: { id: "signupemail", label: t("email"), rules: { match: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, uniquefunclazy: checkemail } }, // eslint-disable-line
         signupphone: { id: "signupphone", label: t("phonenumber"),requiredLabel: true, rules: { required: true, minlength: 10, maskedchars: [props.region.dialCode, " ", "(", ")", "_"], uniquefunclazy: checkphone } },
@@ -49,7 +49,7 @@ function Signup(props) {
             PaperProps={{ sx: { backgroundColor: theme.palette.dialog.main } }}>
             <DialogTitle sx={{ textAlign: "center", marginBottom: "8px", color: theme.palette.contrast.main }}>{t("createaccount")}!</DialogTitle>
             <DialogContent>
-                <CustomTextBox label={control.signupname.label} id={control.signupname.id} />
+                <CustomTextBox label={control.signupfullname.label} id={control.signupfullname.id} />
                 <CustomUsername label={control.signupusername.label} id={control.signupusername.id} 
                     helperText={control.signupusername.helperText} error={control.signupusername.error}
                     required={control.signupusername.requiredLabel} onChange={OnChange} onBlur={OnBlur} />

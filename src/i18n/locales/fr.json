@@ -1,5 +1,5 @@
 {
-  "home": "Accueil",
+  "home": "Page d'accueil",
   "signin": "S'identifier",
   "signup": "S'inscrire",
   "username": "Nom d'utilisateur",
@@ -8,7 +8,7 @@
   "email": "Adresse e-mail",
   "confirmemail": "Confirmez votre adresse e-mail",
   "usernamephoneoremail": "Nom d'utilisateur, numéro de téléphone ou email",
-  "name": "Nom",
+  "fullname": "Nom et prénom",
   "phonenumber": "Numéro de téléphone",
   "welcomeback": "Content de te revoir",
   "createaccount": "Créer un compte",

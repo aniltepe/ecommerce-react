@@ -8,7 +8,7 @@
   "email": "Email address",
   "confirmemail": "Confirm Email address",
   "usernamephoneoremail": "Username, phone number or Email",
-  "name": "Name",
+  "fullname": "Full name",
   "phonenumber": "Phone number",
   "welcomeback": "Welcome back",
   "createaccount": "Create an account",

@@ -8,7 +8,7 @@
   "email": "電子メールアドレス",
   "confirmemail": "メールアドレスを確認",
   "usernamephoneoremail": "ユーザー名、電話番号または電子メール",
-  "name": "名前",
+  "fullname": "フルネーム",
   "phonenumber": "電話番号",
   "welcomeback": "お帰りなさい",
   "createaccount": "アカウントを作成する",
