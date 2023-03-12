@@ -114,15 +114,15 @@ function LandingPage() {
     <div>
       <Categories>
         <Buttons>
-          <Button endIcon={<KeyboardArrowDown />} color="contrast" variant="outlined" sx={btnStyle}>{t("newfeatured")}</Button>
-          <Button endIcon={<KeyboardArrowDown />} color="contrast" variant="outlined" sx={btnStyle}>{t("sale")}</Button>
-          <Button endIcon={<KeyboardArrowDown />} color="contrast" variant="outlined" sx={btnStyle}>{t("men")}</Button>
-          <Button endIcon={<KeyboardArrowDown />} color="contrast" variant="outlined" sx={btnStyle}>{t("women")}</Button>
-          <Button endIcon={<KeyboardArrowDown />} color="contrast" variant="outlined" sx={btnStyle}>{t("kids")}</Button>
-          <Button endIcon={<KeyboardArrowDown />} color="contrast" variant="outlined" sx={btnStyle}>{t("collection")}</Button>
+          <Button endIcon={<KeyboardArrowDown />} color="contrast" variant="outlined" sx={btnStyle}>{t("product:newfeatured")}</Button>
+          <Button endIcon={<KeyboardArrowDown />} color="contrast" variant="outlined" sx={btnStyle}>{t("product:sale")}</Button>
+          <Button endIcon={<KeyboardArrowDown />} color="contrast" variant="outlined" sx={btnStyle}>{t("product:men")}</Button>
+          <Button endIcon={<KeyboardArrowDown />} color="contrast" variant="outlined" sx={btnStyle}>{t("product:women")}</Button>
+          <Button endIcon={<KeyboardArrowDown />} color="contrast" variant="outlined" sx={btnStyle}>{t("product:kids")}</Button>
+          <Button endIcon={<KeyboardArrowDown />} color="contrast" variant="outlined" sx={btnStyle}>{t("product:collection")}</Button>
         </Buttons>
         <SearchField>
-          <TextField fullWidth variant="outlined" placeholder={t("findproduct") + "..."}
+          <TextField fullWidth variant="outlined" placeholder={t("product:findproduct") + "..."}
             sx={{ backgroundColor: "#ffffff", flex: "1", borderRadius: "20px" }} 
             inputProps={{sx: {padding: "8px 14px !important"} }}
             InputProps={{

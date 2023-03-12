@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { login, logout, signup } from '../Services/UserService';
+import { login, logout, signup } from '../services/userService';
 
 const initialState = {
-  status: 'loggedout',
+  status: 'initial',
   user: undefined
 };
 

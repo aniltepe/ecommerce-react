@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { Snackbar, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
-export function useCustomSnackbar() {
+export function useSnackBar() {
   const [items, setItems] = useState([]);
   const add = useCallback((item) => {
     setItems(items.concat(item));
@@ -10,7 +10,7 @@ export function useCustomSnackbar() {
   return {add, items, setItems};
 }
 
-export default function CustomSnackbar(props) {
+export default function SnackBar(props) {
   const sbMargin = (window.innerWidth < 600) ? 8 : 24;
   const sbHeight = 48;
   const handleClose = (event, reason, sb) => {

@@ -3,9 +3,15 @@ import { Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText
 import { Storefront } from '@mui/icons-material';
 import { Link } from "react-router-dom";
 import { useTheme } from '@mui/material/styles';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectDrawerOpen, setDrawerOpen } from '../../slices/uiSlice';
 
 function DrawerMenu(props) {
   const theme = useTheme();
+  const { t } = useTranslation();
+  const drawerOpen = useSelector(selectDrawerOpen);
+  const dispatch = useDispatch();
   const [toolbarHeight, setToolbarHeight] = useState(0);
   const [windowHeight, setWindowHeight] = useState(0);
   let toolbar = document.getElementById("app-menubar");
@@ -22,7 +28,7 @@ function DrawerMenu(props) {
     const toggle = (opt) => { 
         return () => props.setOpen(opt); };
     return (
-        <Drawer anchor="left" open={props.open} onClose={toggle(false)} sx={{ zIndex: "1600" }}
+        <Drawer anchor="left" open={drawerOpen} onClose={() => dispatch(setDrawerOpen(false))} sx={{ zIndex: "1600" }}
           PaperProps={{ 
             sx: {height: (windowHeight - toolbarHeight) + "px", top: toolbarHeight + "px" },
           }} >
