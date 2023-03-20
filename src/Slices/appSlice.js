@@ -1,14 +1,14 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import * as api from '../services/appService';
 import i18n from 'i18next';
+import { Buffer } from "buffer";
  
 const initialState = {
     regions: [],
-    locales: [],
+    langs: [],
     countries: [],
-    currLocale: undefined,
-    currLocaleName: undefined,
-    currCountry: {name: "", dialCode: "+"}
+    currLang: {id: "", name: ""},
+    currCountry: {name: "", dialCode: "+", icon: ""}
 };
 
 export const getRegionsAsync = createAsyncThunk(
@@ -19,18 +19,18 @@ export const getRegionsAsync = createAsyncThunk(
   }
 )
 
-export const getLocalesAsync = createAsyncThunk(
-  'app/getlocales',
+export const getLangsAsync = createAsyncThunk(
+  'app/getlangs',
   async () => {
-    const res = await api.getLocales();
+    const res = await api.getLangs();
     return res.data;
   }
 )
 
-export const getLocaleAsync = createAsyncThunk(
-  'app/getlocalebyid',
+export const getLangAsync = createAsyncThunk(
+  'app/getlangbyid',
   async (id) => {
-    const res = await api.getLocale(id);
+    const res = await api.getLang(id);
     return res.data;
   }
 )
@@ -55,39 +55,38 @@ export const appSlice = createSlice({
     name: 'app',
     initialState,
     reducers: {
-      
+      setCurrCountry: (state, action) => {
+        state.currCountry = action.payload;
+      }
     },
     extraReducers: (builder) => {
       builder
         .addCase(getRegionsAsync.fulfilled, (state, action) => {
           state.regions = action.payload;
         })
-        .addCase(getLocalesAsync.fulfilled, (state, action) => {
-          state.locales = action.payload;
+        .addCase(getLangsAsync.fulfilled, (state, action) => {
+          state.langs = action.payload;
         })
         .addCase(getCountriesAsync.fulfilled, (state, action) => {
           state.countries = action.payload;
         })
-        .addCase(getLocaleAsync.fulfilled, (state, action) => {
-          state.currLocale = action.payload._id;
-          state.currLocaleName = action.payload.default.name;
-          Object.keys(action.payload).forEach(k => {
-            if (k !== "_id")
-              i18n.addResources(action.payload._id, k, action.payload[k]);
-          });
+        .addCase(getLangAsync.fulfilled, (state, action) => {
+          state.currLang = { id: action.payload._id, name: action.payload.default.name };
+          Object.keys(action.payload).filter(k => k !== "_id").forEach(k => i18n.addResources(action.payload._id, k, action.payload[k]));
           i18n.reloadResources(null, Object.keys(action.payload).filter(k => k !== "_id"));
-          i18n.changeLanguage(action.payload._id).then(console.log(i18n.resolvedLanguage));
+          i18n.changeLanguage(action.payload._id);
         })
         .addCase(getCountryAsync.fulfilled, (state, action) => {
-          state.currCountry = action.payload;
+          state.currCountry = {...action.payload, icon: Buffer.from(action.payload.icon).toString()}
         }); },
 });
 
-export const { } = appSlice.actions;
+export const { setCurrCountry } = appSlice.actions;
 
-export const selectLocales = (state) => state.app.locales;
+export const selectRegions = (state) => state.app.regions;
+export const selectLangs = (state) => state.app.langs;
 export const selectCountries = (state) => state.app.countries;
-export const selectCurrLocale = (state) => state.app.currLocale;
+export const selectCurrLang = (state) => state.app.currLang;
 export const selectCurrCountry = (state) => state.app.currCountry;
 
 export default appSlice.reducer;

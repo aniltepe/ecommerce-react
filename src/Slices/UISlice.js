@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-// import { useSnackBar } from '../components/layout/SnackBar';
 
 const initialState = {
     toolbarHeight: 0,
@@ -8,10 +7,6 @@ const initialState = {
     currTheme: "light",
     genericDialog: ""
 };
-
-// function addSnackbarItem() {
-//   const {add} = useSnackBar();
-// }
 
 export const uiSlice = createSlice({
     name: 'ui',
@@ -31,10 +26,7 @@ export const uiSlice = createSlice({
       },
       setGenericDialog: (state, action) => {
         state.genericDialog = action.payload;
-      },
-      // addSnackbarItem: (state, action) => {
-
-      // }
+      }
     },
     extraReducers: (builder) => { },
 });

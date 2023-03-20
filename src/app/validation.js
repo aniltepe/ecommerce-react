@@ -24,7 +24,7 @@ export const validateOnChange = (event, control, setControl, t) => {
             let helperTxt = t("validation:fieldinvalid").replace("<0></0>", control[event.target.id].label);
             setControl({ ...control, [event.target.id]: { ...control[event.target.id], error: true, chgvlderr: true, helperText: helperTxt } } );
         }
-        else if (rules.uniquefuncimmdt && !rules.uniquefuncimmdt(fieldValue) && rules.minlength && fieldValue.length >= rules.minlength ) {
+        else if (rules.eagerfunc && !rules.eagerfunc(fieldValue) && rules.minlength && fieldValue.length >= rules.minlength ) {
             let helperTxt = t("validation:fieldinuse").replace("<0></0>", control[event.target.id].label);
             setControl({ ...control, [event.target.id]: { ...control[event.target.id], error: true, chgvlderr: true, helperText: helperTxt } } );
         }
@@ -63,7 +63,7 @@ export const validateOnBlur = (event, control, setControl, t) => {
             let helperTxt = t("validation:fieldinvalid").replace("<0></0>", control[event.target.id].label);
             setControl({ ...control, [event.target.id]: { ...control[event.target.id], error: true, helperText: helperTxt } } );
         }
-        else if (rules.uniquefunclazy && !rules.uniquefunclazy(fieldValue)) {
+        else if (rules.lazyfunc && !rules.lazyfunc(fieldValue)) {
             let helperTxt = t("validation:fieldinuse").replace("<0></0>", control[event.target.id].label);
             setControl({ ...control, [event.target.id]: { ...control[event.target.id], error: true, helperText: helperTxt } } );
         }

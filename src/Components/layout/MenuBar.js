@@ -2,12 +2,11 @@ import React from 'react';
 import { Link } from "react-router-dom";
 
 import { AppBar, Toolbar, Button, IconButton  } from '@mui/material';
-import { Menu, DarkModeOutlined, LightModeOutlined, ShoppingBagOutlined, 
-    NotificationsOutlined } from '@mui/icons-material';
+import { Menu, ShoppingBagOutlined, NotificationsOutlined } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { styled, useTheme } from '@mui/material/styles';
-import { useDispatch, useSelector } from 'react-redux';
-import { setDrawerOpen, setCurrTheme, selectCurrTheme } from '../../slices/uiSlice';
+import { useDispatch } from 'react-redux';
+import { setDrawerOpen } from '../../slices/uiSlice';
 
 const AppBarIcons = styled('div')(() => ({
     flex: "1",
@@ -54,21 +53,16 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
 function MenuBar() {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-    const themeCode = useSelector(selectCurrTheme);
     const theme = useTheme();
     
     return (
-        <AppBar id="app-menubar" position="static">
+        <AppBar id="app-menubar" position="static" sx={{height: {xs: "61px", sm: "64px"}}}>
             <Toolbar>
                 <IconButton color="inherit" aria-label="Menu"
                     onClick={() => dispatch(setDrawerOpen(true)) }>
                     <Menu />
                 </IconButton>
                 <AppBarIcons>
-                    <StyledIconButton color="inherit" aria-label="Theme"
-                        onClick={() => { themeCode === "light" ? dispatch(setCurrTheme("dark")) : dispatch(setCurrTheme("light"))} }>
-                        { themeCode === "light" ? <DarkModeOutlined /> : <LightModeOutlined /> }
-                    </StyledIconButton>
                     <StyledIconButton color="inherit" aria-label="ShoppingBag">
                         <ShoppingBagOutlined />
                         <TopRightIcon>

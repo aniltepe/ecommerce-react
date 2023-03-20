@@ -1,12 +1,12 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { Snackbar, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
 export function useSnackBar() {
   const [items, setItems] = useState([]);
-  const add = useCallback((item) => {
+  const add = function(item) {
     setItems(items.concat(item));
-  }, [items]);
+  };
   return {add, items, setItems};
 }
 

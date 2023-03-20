@@ -10,7 +10,7 @@ import LandingPage from '../pages/LandingPage';
 import SnackBar, { useSnackBar } from '../components/layout/SnackBar';
 import Generic from '../components/dialog/Generic';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCountryAsync, getLocaleAsync } from '../slices/appSlice';
+import { getCountryAsync, getLangAsync, getRegionsAsync, getLangsAsync, getCountriesAsync } from '../slices/appSlice';
 import { setCurrTheme, selectCurrTheme } from '../slices/uiSlice';
 import themes from './themes';
 
@@ -23,13 +23,16 @@ function App() {
 
   useEffect(() => {
     const settings = (navigator.language || navigator.userLanguage).split("-");
-    const initLocaleCode = settings[0].toLowerCase();
+    const initLangCode = settings[0].toLowerCase();
     const initCountryCode = settings.length > 1 ? settings[1] : settings[0].toUpperCase();
     const initTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark" : "light";
     dispatch(setCurrTheme(initTheme));
-    dispatch(getLocaleAsync(initLocaleCode));
+    dispatch(getLangAsync(initLangCode));
     dispatch(getCountryAsync(initCountryCode));
-    // add({message: window.innerWidth + 'x' + window.innerHeight, autohide: null})
+    dispatch(getRegionsAsync());
+    dispatch(getLangsAsync());
+    dispatch(getCountriesAsync());
+    // add({message: window.innerWidth + 'x' + window.innerHeight, autohide: 2000})
   }, [dispatch]);
   
   return (

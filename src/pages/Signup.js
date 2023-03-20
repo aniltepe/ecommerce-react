@@ -91,9 +91,9 @@ function Signup() {
     const theme = useTheme();
     const fields = {
         signupfullname: { id: "signupfullname", label: t("user:fullname"), rules: { } },
-        signupusername: { id: "signupusername", label: t("user:username"), requiredLabel: true, rules: { required: true, minlength: 4, maxlength: 30, uniquefuncimmdt: checkusername, allowedchars: [".", "_"] } },
-        signupemail: { id: "signupemail", label: t("user:email"), rules: { match: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, uniquefunclazy: checkemail } }, // eslint-disable-line
-        signupphone: { id: "signupphone", label: t("user:phonenumber"),requiredLabel: true, rules: { required: true, minlength: 10, maskedchars: [currCountry.dialCode, " ", "(", ")", "_"], uniquefunclazy: checkphone } },
+        signupusername: { id: "signupusername", label: t("user:username"), requiredLabel: true, rules: { required: true, minlength: 4, maxlength: 30, eagerfunc: checkusername, allowedchars: [".", "_"] } },
+        signupemail: { id: "signupemail", label: t("user:email"), rules: { match: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, lazyfunc: checkemail } }, // eslint-disable-line
+        signupphone: { id: "signupphone", label: t("user:phonenumber"),requiredLabel: true, rules: { required: true, minlength: 10, maskedchars: [currCountry.dialCode, " ", "(", ")", "_"], lazyfunc: checkphone } },
         signuppassword: { id: "signuppassword", label: t("user:password"), requiredLabel: true, dfltHelper: t('validation:passwordincludes'), helperText: t('validation:passwordincludes'), rules: { required: true, minlength: 8, mustcontainlower: true, mustcontainupper: true, mustcontainnumber: true } },
         signuppasswordre: { id: "signuppasswordre", label: t("user:confirmpassword"), requiredLabel: true, rules: { required: true, mustequal: "signuppassword" }},
         signupacceptterms: { id: "signupacceptterms", rules: { required: true }}
