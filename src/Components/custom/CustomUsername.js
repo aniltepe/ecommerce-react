@@ -54,7 +54,7 @@ function CustomTextBox(props) {
                     fontWeight: {xs: "300", sm: "400"}
                 } 
             }}
-            helperText={props.helperText}
+            helperText={props.helpertext}
         />
     );
 }

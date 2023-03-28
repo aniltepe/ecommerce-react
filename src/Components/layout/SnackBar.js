@@ -1,30 +1,26 @@
-import { useState } from 'react';
 import { Snackbar, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteSnackbarItem, selectSnackbarItems } from '../../slices/uiSlice';
 
-export function useSnackBar() {
-  const [items, setItems] = useState([]);
-  const add = function(item) {
-    setItems(items.concat(item));
-  };
-  return {add, items, setItems};
-}
-
-export default function SnackBar(props) {
-  const sbMargin = (window.innerWidth < 600) ? 8 : 24;
-  const sbHeight = 48;
-  const handleClose = (event, reason, sb) => {
+export default function SnackBar() {
+  const dispatch = useDispatch();
+  const items = useSelector(selectSnackbarItems);
+  const sbMargin = (window.innerWidth < 600) ? 8 : 16;
+  const sbHeight = 33.5938;
+  const handleClose = (event, reason, i) => {
     if (reason !== "clickaway") 
-      props.setItems(props.items.filter(itm => itm !== sb));
+      dispatch(deleteSnackbarItem(i));
   }
   return (
     <>
-      {props.items.slice().reverse().map((sb, i) => {
+      {items.slice().reverse().map((sb, i) => {
         return <Snackbar key={i} open={true} message={sb.message} autoHideDuration={sb.autohide}
-          onClose={(event, reason) => handleClose(event, reason, sb)}
-          sx={{bottom: (i * sbHeight + (i + 1) * sbMargin) + 'px !important', right: "auto" }}
-          ContentProps={{sx: {minWidth: "150px !important"}}}
-          action={(<IconButton size="small" color="inherit" onClick={(event) => handleClose(event, "closeicon", sb)} ><Close fontSize="small" /></IconButton>)}
+          anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+          onClose={(event, reason) => handleClose(event, reason, i)}
+          sx={{top: (i * sbHeight + (i + 1) * sbMargin) + 'px !important', left: {xs: "50%"}, transform: {xs: "translateX(-50%)"}}}
+          ContentProps={{sx: { minWidth: "150px !important", lineHeight: 0.4, flexGrow: "unset", ".MuiSnackbarContent-action": {marginRight: "12px", paddingLeft: "0px"} }}}
+          action={(<IconButton sx={{position: "absolute"}} size="small" color="inherit" onClick={(event) => handleClose(event, "closeicon", i)} ><Close fontSize="small" /></IconButton>)}
         />
       })}
     </>

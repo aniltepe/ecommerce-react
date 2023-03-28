@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import { Public, Storefront, Translate, DarkModeOutlined, LightModeOutlined } from '@mui/icons-material';
+import { Public, Storefront, Translate, DarkModeOutlined, LightModeOutlined, AppSettingsAlt } from '@mui/icons-material';
 import { Link } from "react-router-dom";
 import { useTheme, styled } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
@@ -52,10 +52,10 @@ function DrawerMenu() {
           onClose={() => dispatch(setDrawerOpen(false))}
           sx={{ zIndex: "1600", ".MuiBackdrop-root": { backdropFilter: "blur(2px)", filter: "blur(0px)" } }}
           PaperProps={{ 
-            sx: {height: {xs: "calc(100vh - 61px)", sm: "calc(100vh - 64px)"}, bottom: "0px", top: "unset", width: "240px", backgroundColor: theme.palette.drawer.main }
+            sx: {height: {xs: "calc(100dvh - 61px)", sm: "calc(100dvh - 64px)"}, bottom: "0px", top: "unset", width: "240px", backgroundColor: theme.palette.drawer.main }
           }} >
             <Box>
-                <List>
+                <List onClick={() => dispatch(setDrawerOpen(false))}>
                   <Link to="/" style={{ color: "inherit", textDecoration: "inherit" }}>
                     <ListItem disablePadding>
                       <ListItemButtonStyled>
@@ -63,6 +63,16 @@ function DrawerMenu() {
                           <Storefront />
                         </ListItemIconStyled>
                         <ListItemTextStyled primary={t("shop")} />
+                      </ListItemButtonStyled>
+                    </ListItem>
+                  </Link>
+                  <Link to="test" style={{ color: "inherit", textDecoration: "inherit" }}>
+                    <ListItem disablePadding>
+                      <ListItemButtonStyled>
+                        <ListItemIconStyled>
+                          <AppSettingsAlt />
+                        </ListItemIconStyled>
+                        <ListItemTextStyled primary={"Test"} />
                       </ListItemButtonStyled>
                     </ListItem>
                   </Link>

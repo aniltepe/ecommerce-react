@@ -1,34 +1,61 @@
 import axios from "axios";
 
+let lastTimeout = undefined;
+let lastAttemptedEmail = undefined;
+let lastAttemptedPhone = undefined;
+let lastAttemptedEmailResp = undefined;
+let lastAttemptedPhoneResp = undefined;
+
 export const login = (data) => {
-    axios.post("api/user/login", data)
-    .then(res => console.log(res))
+    return axios.post("https://192.168.1.38/api/user/login", data);
 }
 
 export const logout = (data) => {
-    axios.post("api/user/logout", data)
-    .then(res => console.log(res))
+    return axios.post("https://192.168.1.38/api/user/logout", data);
 }
 
 export const signup = (data) => {
-    axios.post("api/user/signup", data)
-     .then(res => console.log(res));
+    return axios.post("https://192.168.1.38/api/user/signup", data);
 };
 
-export const checkusername = (username) => {
-    return true;
-    // axios.post("api/checkusername", username)
-    //  .then(res => console.log(res));
+export const checkusername = (username, withError) => {
+    if (username === "")
+        return;
+    if (lastTimeout)
+        clearTimeout(lastTimeout);
+    if (withError)
+        return new Promise((resolve) => resolve({data: false}));
+    return new Promise((resolve) => {
+        lastTimeout = setTimeout(() => {
+            lastTimeout = undefined;
+            const response = axios.get("https://192.168.1.38/api/user/checkusername/" + username);
+            resolve(response);
+        }, 1000);
+    })
 };
 
 export const checkemail = (email) => {
-    return true;
-    // axios.post("api/checkusername", username)
-    //  .then(res => console.log(res));
+    if (email === "")
+        return;
+    if (lastAttemptedEmail === email)
+        return new Promise((resolve) => resolve({data: lastAttemptedEmailResp}));
+    lastAttemptedEmail = email;
+    return new Promise(async (resolve) => {
+        const response = await axios.get("https://192.168.1.38/api/user/checkemail/" + email);
+        lastAttemptedEmailResp = response.data;
+        resolve(response);
+    }); 
 };
 
 export const checkphone = (phone) => {
-    return true;
-    // axios.post("api/checkusername", username)
-    //  .then(res => console.log(res));
+    if (phone === "")
+        return;
+    if (lastAttemptedPhone === phone)
+        return new Promise((resolve) => resolve({data: lastAttemptedPhoneResp}));
+    lastAttemptedPhone = phone;
+    return new Promise(async (resolve) => {
+        const response = await axios.get("https://192.168.1.38/api/user/checkphone/" + phone);
+        lastAttemptedPhoneResp = response.data;
+        resolve(response);
+    });
 };

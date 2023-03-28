@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 
-export default {
+const themes = {
     light: createTheme({ 
         palette:
         { 
@@ -36,3 +36,5 @@ export default {
         }
     })
 };
+
+export default themes;

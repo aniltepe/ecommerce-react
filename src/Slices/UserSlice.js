@@ -2,31 +2,31 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { login, logout, signup } from '../services/userService';
 
 const initialState = {
-  status: 'initial',
-  user: undefined
+  status: "idle",
+  loggedUser: undefined
 };
 
 export const signupAsync = createAsyncThunk(
     'user/signup',
     async (signupdata) => {
-        const response = await signup(signupdata);
-        return response;
+        const res = await signup(signupdata);
+        return res.data;
     }
 )
 
 export const loginAsync = createAsyncThunk(
     'user/login',
     async (logindata) => {
-        const response = await login(logindata);
-        return response;
+        const res = await login(logindata);
+        return res.data;
     }
 )
 
 export const logoutAsync = createAsyncThunk(
     'user/logout',
     async (logoutdata) => {
-        const response = await logout(logoutdata);
-        return response;
+        const res = await logout(logoutdata);
+        return res.data;
     }
 )
 
@@ -37,10 +37,10 @@ export const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(signupAsync.pending, (state) => {
-        state.status = 'loading';
+        state.status = "loading";
       })
       .addCase(signupAsync.fulfilled, (state, action) => {
-        state.status = 'signedup';
+        state.status = "idle";
       });
   },
 });

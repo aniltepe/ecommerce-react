@@ -6,7 +6,7 @@ import { Menu, ShoppingBagOutlined, NotificationsOutlined } from '@mui/icons-mat
 import { useTranslation } from 'react-i18next';
 import { styled, useTheme } from '@mui/material/styles';
 import { useDispatch } from 'react-redux';
-import { setDrawerOpen } from '../../slices/uiSlice';
+import { setDrawerOpen, addSnackbarItem } from '../../slices/uiSlice';
 
 const AppBarIcons = styled('div')(() => ({
     flex: "1",
@@ -63,7 +63,7 @@ function MenuBar() {
                     <Menu />
                 </IconButton>
                 <AppBarIcons>
-                    <StyledIconButton color="inherit" aria-label="ShoppingBag">
+                    <StyledIconButton color="inherit" aria-label="ShoppingBag" onClick={() => dispatch(addSnackbarItem({message: "Shopping bag clicked"}))}>
                         <ShoppingBagOutlined />
                         <TopRightIcon>
                             <div style={{ borderRadius: "100%", backgroundColor: theme.palette.contrast.main,
@@ -73,13 +73,13 @@ function MenuBar() {
                 </AppBarIcons>
                 { true
                     ? <AppBarUserBtns>
-                        <Link to="/login" style={{ color: "inherit", textDecoration: "inherit" }}>
+                        <Link to="./login" relative="path" style={{ color: "inherit", textDecoration: "inherit" }}>
                             <Button color="buttonPrimary" variant="contained"
                                 sx={{ padding: "0px 8px", margin: "3px 0px", textAlign: "right", color: "buttonContrast.main" }}>
                                 {t("login")}
                             </Button>
                         </Link>
-                        <Link to="/signup" style={{ color: "inherit", textDecoration: "inherit" }}>
+                        <Link to="./signup" relative="path" style={{ color: "inherit", textDecoration: "inherit" }}>
                             <Button color="buttonPrimary" variant="contained"
                                 sx={{ padding: "0px 8px", margin: "3px 0px", textAlign: "right", color: "buttonContrast.main" }}>
                                 {t("signup")}

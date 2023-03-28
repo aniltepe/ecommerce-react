@@ -1,23 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    toolbarHeight: 0,
-    windowHeight: 0,
     drawerOpen: false,
-    currTheme: "light",
-    genericDialog: ""
+    currTheme: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark" : "light",
+    genericDialog: "",
+    snackbarItems: []
 };
 
 export const uiSlice = createSlice({
     name: 'ui',
     initialState,
     reducers: {
-      toolbarHeight: (state, action) => {
-        state.toolbarHeight = action.payload;
-      },
-      windowHeight: (state, action) => {
-        state.windowHeight = action.payload;
-      },
       setDrawerOpen: (state, action) => {
         state.drawerOpen = action.payload;
       },
@@ -26,17 +19,23 @@ export const uiSlice = createSlice({
       },
       setGenericDialog: (state, action) => {
         state.genericDialog = action.payload;
+      },
+      addSnackbarItem: (state, action) => {
+        state.snackbarItems.push(action.payload);
+      }, 
+      deleteSnackbarItem: (state, action) => {
+        const idx = state.snackbarItems.length - 1 - action.payload;
+        state.snackbarItems = [...state.snackbarItems.slice(0, idx), ...state.snackbarItems.slice(idx + 1)];
       }
     },
     extraReducers: (builder) => { },
 });
 
-export const { toolbarHeight, windowHeight, setDrawerOpen, setCurrTheme, setGenericDialog } = uiSlice.actions;
+export const { setDrawerOpen, setCurrTheme, setGenericDialog, addSnackbarItem, deleteSnackbarItem } = uiSlice.actions;
 
-export const selectToolbarHeight = (state) => state.ui.toolbarHeight;
-export const selectWindowHeight = (state) => state.ui.windowHeight;
 export const selectDrawerOpen = (state) => state.ui.drawerOpen;
 export const selectCurrTheme = (state) => state.ui.currTheme;
 export const selectGenericDialog = (state) => state.ui.genericDialog;
+export const selectSnackbarItems = (state) => state.ui.snackbarItems;
 
 export default uiSlice.reducer;

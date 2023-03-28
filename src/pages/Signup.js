@@ -3,8 +3,9 @@ import { useNavigate, Link } from "react-router-dom";
 import { checkusername, checkemail, checkphone } from '../services/userService';
 import { validateOnChange, validateOnBlur, validateOnSubmit } from '../app/validation';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCurrCountry } from '../slices/appSlice';
-import { setGenericDialog } from '../slices/uiSlice';
+import { selectCurrCountry, selectCurrLang } from '../slices/appSlice';
+import { setGenericDialog, addSnackbarItem } from '../slices/uiSlice';
+import { signupAsync } from '../slices/userSlice';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Checkbox } from '@mui/material';
 import { useTranslation, Trans } from 'react-i18next';
@@ -88,23 +89,24 @@ function Signup() {
     const nsValidLoaded = i18n.hasLoadedNamespace('validation');
     const navigate = useNavigate();
     const currCountry = useSelector(selectCurrCountry);
+    const currLang = useSelector(selectCurrLang);
     const theme = useTheme();
     const fields = {
-        signupfullname: { id: "signupfullname", label: t("user:fullname"), rules: { } },
-        signupusername: { id: "signupusername", label: t("user:username"), requiredLabel: true, rules: { required: true, minlength: 4, maxlength: 30, eagerfunc: checkusername, allowedchars: [".", "_"] } },
+        signupfullname: { id: "signupfullname", label: t("user:fullname"), rules: { maxlength: 150 } },
+        signupusername: { id: "signupusername", label: t("user:username"), requiredlabel: true, rules: { required: true, match: /^([a-zA-Z0-9]+[\._]?)*$/, minlength: 4, maxlength: 30, eagerfunc: checkusername, allowedchars: [".", "_"] } },  // eslint-disable-line
         signupemail: { id: "signupemail", label: t("user:email"), rules: { match: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, lazyfunc: checkemail } }, // eslint-disable-line
-        signupphone: { id: "signupphone", label: t("user:phonenumber"),requiredLabel: true, rules: { required: true, minlength: 10, maskedchars: [currCountry.dialCode, " ", "(", ")", "_"], lazyfunc: checkphone } },
-        signuppassword: { id: "signuppassword", label: t("user:password"), requiredLabel: true, dfltHelper: t('validation:passwordincludes'), helperText: t('validation:passwordincludes'), rules: { required: true, minlength: 8, mustcontainlower: true, mustcontainupper: true, mustcontainnumber: true } },
-        signuppasswordre: { id: "signuppasswordre", label: t("user:confirmpassword"), requiredLabel: true, rules: { required: true, mustequal: "signuppassword" }},
+        signupphone: { id: "signupphone", label: t("user:phonenumber"),requiredlabel: true, rules: { required: true, minlength: 10, maskedchars: [currCountry.dialCode, " ", "(", ")", "_"], lazyfunc: checkphone } },
+        signuppassword: { id: "signuppassword", label: t("user:password"), requiredlabel: true, defaulthelper: t('validation:passwordincludes'), helpertext: t('validation:passwordincludes'), rules: { required: true, minlength: 8, mustcontainlower: true, mustcontainupper: true, mustcontainnumber: true } },
+        signuppasswordre: { id: "signuppasswordre", label: t("user:confirmpassword"), requiredlabel: true, rules: { required: true, mustequal: "signuppassword" }},
         signupacceptterms: { id: "signupacceptterms", rules: { required: true }}
     };
     const [control, setControl] = React.useState(fields);
 
     useEffect(() => {
-        if (nsUserLoaded && nsValidLoaded)
+        if (nsUserLoaded && nsValidLoaded && currCountry.name !== "")
             setControl(fields);
     // eslint-disable-next-line 
-    }, [nsUserLoaded, nsValidLoaded]);
+    }, [nsUserLoaded, nsValidLoaded, currCountry]);
 
     const OnChange = (event) => {
         validateOnChange(event, control, setControl, t);
@@ -116,33 +118,55 @@ function Signup() {
     const handleSubmit = () => {
         let isFormValid = validateOnSubmit(control, setControl, t);
         if (isFormValid) {
-            navigate("/");
+            const signupdata = {
+                fullname: document.getElementById(control.signupfullname.id).value,
+                username: document.getElementById(control.signupusername.id).value.toLowerCase(),
+                email: document.getElementById(control.signupemail.id).value,
+                phone: document.getElementById(control.signupphone.id).value.replace("(", "").replace(")", "").replaceAll(" ", ""),
+                language: currLang.id,
+                country: currCountry.id,
+                password: document.getElementById(control.signuppassword.id).value
+            };
+            dispatch(signupAsync(signupdata)).then((doc) => {
+                console.log(doc)
+                if (doc.type === "user/signup/fulfilled") {
+                    navigate("../");
+                    dispatch(addSnackbarItem({message: t("accountcreated"), autohide: 5000}));
+                }
+                else if (doc.type === "user/signup/rejected") {
+                    dispatch(addSnackbarItem({message: t("erroroccured"), autohide: 5000}));
+                }
+            }).catch((err) => {
+                console.log(err);
+                dispatch(addSnackbarItem({message: t("erroroccured"), autohide: 5000}));
+            });
         }
     }
 
     return (
-        <Dialog scroll="body" open={true} onClose={() => navigate("/")} sx={{ ".MuiBackdrop-root": { backdropFilter: "blur(2px)", filter: "blur(0px)" } }}
+        <Dialog scroll="body" open={true} onClose={() => navigate("../")} sx={{ ".MuiBackdrop-root": { backdropFilter: "blur(2px)", filter: "blur(0px)" } }}
             PaperProps={{ sx: { backgroundColor: theme.palette.dialog.main } }}>
             <DialogTitle sx={{ textAlign: "center", color: theme.palette.contrast.main, paddingBottom: "0px", fontFamily: "inherit" }}>
                 {t("createaccount")}!
-                <Close sx={{float: "right", marginTop: "-8px", marginRight: "-16px"}} onClick={() => navigate("/")} />
+                <Close sx={{float: "right", marginTop: "-8px", marginRight: "-16px"}} onClick={() => navigate("../")} />
             </DialogTitle>
             <DialogContent sx={{overflow: "hidden"}}>
                 <CustomTextBox label={control.signupfullname.label} id={control.signupfullname.id} />
                 <CustomUsername label={control.signupusername.label} id={control.signupusername.id} 
-                    helperText={control.signupusername.helperText} error={control.signupusername.error}
-                    required={control.signupusername.requiredLabel} onChange={OnChange} onBlur={OnBlur} />
-                <CustomTextBox label={control.signupemail.label} id={control.signupemail.id} helperText={control.signupemail.helperText}
-                    error={control.signupemail.error} required={control.signupemail.requiredLabel} onBlur={OnBlur}/>
+                    helpertext={control.signupusername.helpertext} error={control.signupusername.error}
+                    required={control.signupusername.requiredlabel} onChange={OnChange} onBlur={OnBlur} />
+                <CustomTextBox label={control.signupemail.label} id={control.signupemail.id} 
+                    helpertext={control.signupemail.helpertext} error={control.signupemail.error} 
+                    required={control.signupemail.requiredlabel} onBlur={OnBlur}/>
                 <CustomPhone label={control.signupphone.label} id={control.signupphone.id} regionCode={currCountry.dialCode}
-                    helperText={control.signupphone.helperText} error={control.signupphone.error} 
-                    required={control.signupphone.requiredLabel} onBlur={OnBlur} />
+                    helpertext={control.signupphone.helpertext} error={control.signupphone.error} 
+                    required={control.signupphone.requiredlabel} onBlur={OnBlur} />
                 <CustomPassword label={control.signuppassword.label} id={control.signuppassword.id} 
-                    helperText={control.signuppassword.helperText} error={control.signuppassword.error}
-                    required={control.signuppassword.requiredLabel} onBlur={OnBlur} />
+                    helpertext={control.signuppassword.helpertext} error={control.signuppassword.error}
+                    required={control.signuppassword.requiredlabel} onBlur={OnBlur} />
                 <CustomPassword label={control.signuppasswordre.label} id={control.signuppasswordre.id} 
-                    helperText={control.signuppasswordre.helperText} error={control.signuppasswordre.error} 
-                    required={control.signuppasswordre.requiredLabel} onBlur={OnBlur} onChange={OnChange} />
+                    helpertext={control.signuppasswordre.helpertext} error={control.signuppasswordre.error} 
+                    required={control.signuppasswordre.requiredlabel} onBlur={OnBlur} onChange={OnChange} />
                 <AdditionalInfo>
                     <Checkbox 
                         id={control.signupacceptterms.id} onChange={OnChange}
@@ -162,7 +186,7 @@ function Signup() {
             </DialogActions>
             <DialogFooter>
                 <Trans i18nKey="alreadyhaveaccount">
-                    <CustomLink to="/login" />
+                    <CustomLink to="../login" />
                 </Trans>
             </DialogFooter>
         </Dialog>

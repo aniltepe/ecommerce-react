@@ -69,17 +69,17 @@ function Login() {
     }
 
     return (
-        <Dialog scroll="body" open={true} onClose={() => navigate("/")} sx={{ ".MuiBackdrop-root": { backdropFilter: "blur(2px)", filter: "blur(0px)" } }}
+        <Dialog scroll="body" open={true} onClose={() => navigate("../")} sx={{ ".MuiBackdrop-root": { backdropFilter: "blur(2px)", filter: "blur(0px)" } }}
             PaperProps={{ sx: { backgroundColor: theme.palette.dialog.main } }}>
             <DialogTitle sx={{ textAlign: "center", marginBottom: "8px", color: theme.palette.contrast.main, fontFamily: "inherit" }}>
                 {t("signinaccount")}!
-                <Close sx={{float: "right", marginTop: "-8px", marginRight: "-16px"}} onClick={() => navigate("/")} />
+                <Close sx={{float: "right", marginTop: "-8px", marginRight: "-16px"}} onClick={() => navigate("../")} />
             </DialogTitle>
             <DialogContent>
                 <CustomTextBox label={control.loginany.label} id={control.loginany.id} 
-                    helperText={control.loginany.helperText} error={control.loginany.error} longLabel={true}/>
+                    helpertext={control.loginany.helpertext} error={control.loginany.error} longLabel={true}/>
                 <CustomPassword label={control.loginpassword.label} id={control.loginpassword.id} 
-                    helperText={control.loginpassword.helperText} error={control.loginpassword.error}/>
+                    helpertext={control.loginpassword.helpertext} error={control.loginpassword.error}/>
                 <AdditionalInfo>
                     <FormControlLabel label={control.loginremember.label} sx={{ color: "contrast.main", ':hover': { color: "contrastHover.main" }, ".MuiTypography-root": { paddingLeft: "6px" } }} control={
                         <Checkbox id={control.loginremember.id} sx={{ color: "contrast.main", padding: "0px", '&.Mui-checked': { color: "contrastHover.main" }}} /> }/>
@@ -95,7 +95,7 @@ function Login() {
             </DialogActions>
             <DialogFooter>
                 <Trans i18nKey="donthaveaccount">
-                    <CustomLink to="/signup" />
+                    <CustomLink to="../signup" />
                 </Trans>
             </DialogFooter>
         </Dialog>
