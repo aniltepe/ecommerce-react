@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 import { validateOnSubmit } from '../app/validation';
+import { useDispatch, useSelector } from 'react-redux';
+import { addSnackbarItem } from '../slices/uiSlice';
+import { loginAsync, setLoggedUser, selectStatus } from '../slices/userSlice';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle,
-    Checkbox, FormControlLabel } from '@mui/material';
+    Checkbox, FormControlLabel, CircularProgress } from '@mui/material';
 import { useTranslation, Trans } from 'react-i18next';
 import { styled, useTheme } from '@mui/material/styles';
 import CustomTextBox from '../components/custom/CustomTextBox';
@@ -45,8 +48,10 @@ const DialogFooter = styled('p')(({ theme }) => ({
 
 function Login() {
     const { t, i18n } = useTranslation();
+    const dispatch = useDispatch();
     const nsUserLoaded = i18n.hasLoadedNamespace('user');
     const navigate = useNavigate();
+    const currStatus = useSelector(selectStatus);
     const theme = useTheme();
     const fields = {
         loginany: { id: "loginany", label: t("user:usernamephoneoremail"), rules: { required: true } },
@@ -64,7 +69,33 @@ function Login() {
     const handleSubmit = () => {
         let isFormValid = validateOnSubmit(control, setControl, t);
         if (isFormValid) {
-            navigate("/");
+            const logindata = {
+                any: document.getElementById(control.loginany.id).value,
+                password: document.getElementById(control.loginpassword.id).value,
+                remember: document.getElementById(control.loginremember.id).value
+            };
+            dispatch(loginAsync(logindata)).then((action) => {
+                console.log(action)
+                if (action.type === "user/login/fulfilled") {
+                    if (action.payload.status === 200) {
+                        navigate("../");
+                        dispatch(setLoggedUser(action.payload.data));
+                        dispatch(addSnackbarItem({message: t("loginsuccessful"), autohide: 5000, type: "success"}));
+                    }
+                    else if (action.payload.status === 401) {
+                        dispatch(addSnackbarItem({message: t("validation:passwordnocorrect"), autohide: 5000, type: "error"}));
+                    }
+                    else if (action.payload.status === 404) {
+                        dispatch(addSnackbarItem({message: t("validation:usernotfound"), autohide: 5000, type: "error"}));
+                    }
+                }
+                else if (action.type === "user/login/rejected") {
+                    dispatch(addSnackbarItem({message: t("erroroccured"), autohide: 5000, type: "error"}));
+                }
+            }).catch((err) => {
+                console.log(err);
+                dispatch(addSnackbarItem({message: t("erroroccured"), autohide: 5000, type: "error"}));
+            });
         }
     }
 
@@ -90,7 +121,7 @@ function Login() {
             </DialogContent>
             <DialogActions> 
                 <Button color="buttonPrimary" variant="contained" fullWidth sx={{color: "buttonContrast.main", fontSize: "1.1em" }} onClick={handleSubmit}>
-                    {t("login")}
+                    {currStatus === "loading" ? <CircularProgress color='inherit' size={30.797} /> : t("login")}
                 </Button> 
             </DialogActions>
             <DialogFooter>

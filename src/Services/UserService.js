@@ -7,7 +7,7 @@ let lastAttemptedEmailResp = undefined;
 let lastAttemptedPhoneResp = undefined;
 
 export const login = (data) => {
-    return axios.post("https://192.168.1.38/api/user/login", data);
+    return axios.post("https://192.168.1.38/api/user/login", data).catch((err) => {return err.response});
 }
 
 export const logout = (data) => {

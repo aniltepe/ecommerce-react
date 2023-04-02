@@ -5,9 +5,9 @@ import { validateOnChange, validateOnBlur, validateOnSubmit } from '../app/valid
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrCountry, selectCurrLang } from '../slices/appSlice';
 import { setGenericDialog, addSnackbarItem } from '../slices/uiSlice';
-import { signupAsync } from '../slices/userSlice';
+import { signupAsync, selectStatus } from '../slices/userSlice';
 
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Checkbox } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Checkbox, CircularProgress } from '@mui/material';
 import { useTranslation, Trans } from 'react-i18next';
 import { styled, useTheme } from '@mui/material/styles';
 import CustomTextBox from '../components/custom/CustomTextBox';
@@ -90,6 +90,7 @@ function Signup() {
     const navigate = useNavigate();
     const currCountry = useSelector(selectCurrCountry);
     const currLang = useSelector(selectCurrLang);
+    const currStatus = useSelector(selectStatus);
     const theme = useTheme();
     const fields = {
         signupfullname: { id: "signupfullname", label: t("user:fullname"), rules: { maxlength: 150 } },
@@ -127,18 +128,18 @@ function Signup() {
                 country: currCountry.id,
                 password: document.getElementById(control.signuppassword.id).value
             };
-            dispatch(signupAsync(signupdata)).then((doc) => {
-                console.log(doc)
-                if (doc.type === "user/signup/fulfilled") {
+            dispatch(signupAsync(signupdata)).then((action) => {
+                console.log(action)
+                if (action.type === "user/signup/fulfilled") {
                     navigate("../");
-                    dispatch(addSnackbarItem({message: t("accountcreated"), autohide: 5000}));
+                    dispatch(addSnackbarItem({message: t("accountcreated"), autohide: 5000, type: "success"}));
                 }
-                else if (doc.type === "user/signup/rejected") {
-                    dispatch(addSnackbarItem({message: t("erroroccured"), autohide: 5000}));
+                else if (action.type === "user/signup/rejected") {
+                    dispatch(addSnackbarItem({message: t("erroroccured"), autohide: 5000, type: "error"}));
                 }
             }).catch((err) => {
                 console.log(err);
-                dispatch(addSnackbarItem({message: t("erroroccured"), autohide: 5000}));
+                dispatch(addSnackbarItem({message: t("erroroccured"), autohide: 5000, type: "error"}));
             });
         }
     }
@@ -181,7 +182,7 @@ function Signup() {
             </DialogContent>
             <DialogActions> 
                 <Button color="buttonPrimary" variant="contained" fullWidth sx={{color: "buttonContrast.main", fontSize: "1.1em" }} onClick={handleSubmit} >
-                    {t("signup")}
+                    {currStatus === "loading" ? <CircularProgress color='inherit' size={30.797} /> : t("signup") }
                 </Button>
             </DialogActions>
             <DialogFooter>

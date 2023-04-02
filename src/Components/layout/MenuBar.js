@@ -5,8 +5,9 @@ import { AppBar, Toolbar, Button, IconButton  } from '@mui/material';
 import { Menu, ShoppingBagOutlined, NotificationsOutlined } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { styled, useTheme } from '@mui/material/styles';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setDrawerOpen, addSnackbarItem } from '../../slices/uiSlice';
+import { selectLoggedUser } from '../../slices/userSlice';
 
 const AppBarIcons = styled('div')(() => ({
     flex: "1",
@@ -50,9 +51,24 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
     }
 }));
 
+const UserIconButton = styled('img')(({ theme }) => ({
+    width: "30px",
+    height: "30px",
+    borderRadius: "100%",
+    objectFit: "cover",
+    cursor: "pointer",
+    [theme.breakpoints.down('sm')]: {
+        padding: "1px 6px"
+    },
+    [theme.breakpoints.up('sm')]: {
+        padding: "5px 8px"
+    }
+}));
+
 function MenuBar() {
     const { t } = useTranslation();
     const dispatch = useDispatch();
+    const loggedUser = useSelector(selectLoggedUser);
     const theme = useTheme();
     
     return (
@@ -71,7 +87,7 @@ function MenuBar() {
                         </TopRightIcon>
                     </StyledIconButton>
                 </AppBarIcons>
-                { true
+                { !loggedUser
                     ? <AppBarUserBtns>
                         <Link to="./login" relative="path" style={{ color: "inherit", textDecoration: "inherit" }}>
                             <Button color="buttonPrimary" variant="contained"
@@ -91,10 +107,10 @@ function MenuBar() {
                             <NotificationsOutlined />
                             <TopRightIcon>
                                 <div style={{ borderRadius: "100%", backgroundColor: theme.palette.contrast.main,
-                                    fontSize: "12px", lineHeight: "16px", color: theme.palette.contrastNegative.main }}>3</div>
+                                    fontSize: "12px", lineHeight: "16px", color: theme.palette.contrastNegative.main }}>0</div>
                             </TopRightIcon>
                         </StyledIconButton>
-                        <div></div>
+                        <UserIconButton alt="" src={"data:image/png;base64," + loggedUser.image} />
                     </>
                 }
                 

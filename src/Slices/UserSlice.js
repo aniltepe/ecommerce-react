@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { login, logout, signup } from '../services/userService';
+import { Buffer } from "buffer";
 
 const initialState = {
   status: "idle",
@@ -17,8 +18,8 @@ export const signupAsync = createAsyncThunk(
 export const loginAsync = createAsyncThunk(
     'user/login',
     async (logindata) => {
-        const res = await login(logindata);
-        return res.data;
+        const response = await login(logindata);
+        return { data: response.data, status: response.status, statusText: response.statusText };
     }
 )
 
@@ -33,21 +34,39 @@ export const logoutAsync = createAsyncThunk(
 export const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: { },
+  reducers: {
+    setLoggedUser: (state, action) => {
+      state.loggedUser = {...action.payload, image: Buffer.from(action.payload.image).toString()};
+      console.log(Buffer.from(action.payload.image).toString());
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(signupAsync.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(signupAsync.fulfilled, (state, action) => {
+      .addCase(signupAsync.fulfilled, (state) => {
         state.status = "idle";
+      })
+      .addCase(signupAsync.rejected, (state) => {
+        state.status = "idle";
+      })
+      .addCase(loginAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(loginAsync.fulfilled, (state) => {
+        state.status = "idle";
+      })
+      .addCase(loginAsync.rejected, (state, action) => {
+        state.status = "idle";
+        console.log(action)
       });
   },
 });
 
-// eslint-disable-next-line
-// export const { } = userSlice.actions;
+export const { setLoggedUser } = userSlice.actions;
 
 export const selectStatus = (state) => state.user.status;
+export const selectLoggedUser = (state) => state.user.loggedUser;
 
 export default userSlice.reducer;

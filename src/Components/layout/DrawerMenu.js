@@ -99,9 +99,9 @@ function DrawerMenu() {
                   <ListItem disablePadding>
                     <ListItemButtonStyled onClick={() => { themeCode === "light" ? dispatch(setCurrTheme("dark")) : dispatch(setCurrTheme("light"))}}>
                       <ListItemIconStyled>
-                        { themeCode === "light" ? <LightModeOutlined /> : <DarkModeOutlined /> }
+                        { themeCode === "light" ? <DarkModeOutlined /> : <LightModeOutlined /> }
                       </ListItemIconStyled>
-                      <ListItemTextStyled primary={themeCode === "light" ? t("lightmode") : t("darkmode")} />
+                      <ListItemTextStyled primary={themeCode === "light" ? t("darkmode") : t("lightmode")} />
                     </ListItemButtonStyled>
                   </ListItem>
                 </List>
