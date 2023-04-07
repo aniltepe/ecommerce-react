@@ -29,9 +29,9 @@ const SearchField = styled('div')(({ theme }) => ({
   },
   [theme.breakpoints.between('md', 'lg')]: {
     paddingTop: "0px",
-    paddingRight: "2vw",
-    paddingLeft: "3vw",
-    flex: "0.9"
+    paddingRight: "1vw",
+    paddingLeft: "1vw",
+    flex: "1"
   },
   [theme.breakpoints.up('lg')]: {
     paddingTop: "0px",
@@ -55,7 +55,7 @@ const Broadcast = styled('div')(() => ({
 const Buttons = styled('div')(({ theme }) => ({
   display: "flex",
   flexWrap: "wrap",
-  [theme.breakpoints.between('xs', 'sm')]: {
+  [theme.breakpoints.between('xs', 'md')]: {
     paddingLeft: "8px",
     paddingRight: "8px",
     justifyContent: "flex-start",
@@ -70,12 +70,12 @@ const Buttons = styled('div')(({ theme }) => ({
       display: "none"
     }
   },
-  [theme.breakpoints.between('sm', 'md')]: {
-    paddingLeft: "8px",
-    paddingRight: "8px",
-    justifyContent: "center",
-    gap: "6px",
-  },
+  // [theme.breakpoints.between('sm', 'md')]: {
+  //   paddingLeft: "8px",
+  //   paddingRight: "8px",
+  //   justifyContent: "center",
+  //   gap: "6px",
+  // },
   [theme.breakpoints.between('md', 'lg')]: {
     paddingLeft: "1vw",
     justifyContent: "center",

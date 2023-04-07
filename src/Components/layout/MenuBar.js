@@ -1,13 +1,14 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 
-import { AppBar, Toolbar, Button, IconButton  } from '@mui/material';
-import { Menu, ShoppingBagOutlined, NotificationsOutlined } from '@mui/icons-material';
+import { AppBar, Toolbar, Button, IconButton, MenuItem, ListItemIcon, Divider  } from '@mui/material';
+import MenuComponent from '@mui/material/Menu';
+import { Menu, ShoppingBagOutlined, NotificationsOutlined, Logout, AccountCircle, Settings } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { styled, useTheme } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { setDrawerOpen, addSnackbarItem } from '../../slices/uiSlice';
-import { selectLoggedUser } from '../../slices/userSlice';
+import { logoutAsync, selectLoggedUser } from '../../slices/userSlice';
 
 const AppBarIcons = styled('div')(() => ({
     flex: "1",
@@ -70,6 +71,8 @@ function MenuBar() {
     const dispatch = useDispatch();
     const loggedUser = useSelector(selectLoggedUser);
     const theme = useTheme();
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
     
     return (
         <AppBar id="app-menubar" position="static" sx={{height: {xs: "61px", sm: "64px"}}}>
@@ -110,7 +113,35 @@ function MenuBar() {
                                     fontSize: "12px", lineHeight: "16px", color: theme.palette.contrastNegative.main }}>0</div>
                             </TopRightIcon>
                         </StyledIconButton>
-                        <UserIconButton alt="" src={"data:image/png;base64," + loggedUser.image} />
+                        <UserIconButton alt="" src={"data:image/png;base64," + loggedUser.image} onClick={(e) => setAnchorEl(e.currentTarget)} />
+                        <MenuComponent anchorEl={anchorEl} open={open} onClose={() => setAnchorEl(null)} onClick={() => setAnchorEl(null)}
+                            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }} >
+                          <MenuItem onClick={() => setAnchorEl(null)}>
+                            <ListItemIcon>
+                              <AccountCircle fontSize="small" />
+                            </ListItemIcon>
+                            { t("user:profile") }
+                          </MenuItem>
+                          <Divider />
+                          <MenuItem onClick={() => setAnchorEl(null)}>
+                            <ListItemIcon>
+                              <Settings fontSize="small" />
+                            </ListItemIcon>
+                            { t("user:settings") }
+                          </MenuItem>
+                          <MenuItem onClick={() => { 
+                            dispatch(logoutAsync()).then(() => { 
+                                dispatch(addSnackbarItem({message: t("loggedout"), type: "info", autohide: 5000}));
+                            });
+                            setAnchorEl(null); 
+                          }}>
+                            <ListItemIcon>
+                              <Logout fontSize="small" />
+                            </ListItemIcon>
+                            { t("user:logout") }
+                          </MenuItem>
+                        </MenuComponent>
                     </>
                 }
                 

@@ -6,12 +6,16 @@ let lastAttemptedPhone = undefined;
 let lastAttemptedEmailResp = undefined;
 let lastAttemptedPhoneResp = undefined;
 
-export const login = (data) => {
-    return axios.post("https://192.168.1.38/api/user/login", data).catch((err) => {return err.response});
+export const auth = () => {
+    return axios.get("https://192.168.1.38/api/user/auth", {withCredentials: true}).catch((err) => {return err.response});
 }
 
-export const logout = (data) => {
-    return axios.post("https://192.168.1.38/api/user/logout", data);
+export const login = (data) => {
+    return axios.post("https://192.168.1.38/api/user/login", data, {withCredentials: true}).catch((err) => {return err.response});
+}
+
+export const logout = (data, tokenheader = {}) => {
+    return axios.post("https://192.168.1.38/api/user/logout", data, {withCredentials: true, headers: tokenheader});
 }
 
 export const signup = (data) => {

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { login, logout, signup } from '../services/userService';
+import { login, logout, signup, auth } from '../services/userService';
 import { Buffer } from "buffer";
 
 const initialState = {
@@ -7,27 +7,37 @@ const initialState = {
   loggedUser: undefined
 };
 
-export const signupAsync = createAsyncThunk(
-    'user/signup',
-    async (signupdata) => {
-        const res = await signup(signupdata);
-        return res.data;
-    }
+export const authAsync = createAsyncThunk(
+  'user/auth',
+  async () => {
+      const response = await auth();
+      return { data: response.data, status: response.status, statusText: response.statusText };
+  }
 )
 
 export const loginAsync = createAsyncThunk(
-    'user/login',
-    async (logindata) => {
-        const response = await login(logindata);
-        return { data: response.data, status: response.status, statusText: response.statusText };
+  'user/login',
+  async (logindata) => {
+      const response = await login(logindata);
+      return { data: response.data, status: response.status, statusText: response.statusText };
+  }
+)
+
+export const signupAsync = createAsyncThunk(
+    'user/signup',
+    async (signupdata) => {
+        const response = await signup(signupdata);
+        return response.data;
     }
 )
 
 export const logoutAsync = createAsyncThunk(
     'user/logout',
-    async (logoutdata) => {
-        const res = await logout(logoutdata);
-        return res.data;
+    async (_, thunkAPI) => {
+        const { user } = thunkAPI.getState();
+        const response = await logout({id: user.loggedUser.id}, {"x-access-token": user.loggedUser.accessToken});
+        thunkAPI.dispatch(setUserUndefined());
+        return response.data;
     }
 )
 
@@ -37,7 +47,9 @@ export const userSlice = createSlice({
   reducers: {
     setLoggedUser: (state, action) => {
       state.loggedUser = {...action.payload, image: Buffer.from(action.payload.image).toString()};
-      console.log(Buffer.from(action.payload.image).toString());
+    },
+    setUserUndefined: (state) => {
+      state.loggedUser = undefined;
     }
   },
   extraReducers: (builder) => {
@@ -57,14 +69,25 @@ export const userSlice = createSlice({
       .addCase(loginAsync.fulfilled, (state) => {
         state.status = "idle";
       })
-      .addCase(loginAsync.rejected, (state, action) => {
+      .addCase(authAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(authAsync.fulfilled, (state) => {
         state.status = "idle";
-        console.log(action)
+      })
+      .addCase(logoutAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(logoutAsync.fulfilled, (state) => {
+        state.status = "idle";
+      })
+      .addCase(logoutAsync.rejected, (state) => {
+        state.status = "idle";
       });
   },
 });
 
-export const { setLoggedUser } = userSlice.actions;
+export const { setLoggedUser, setUserUndefined } = userSlice.actions;
 
 export const selectStatus = (state) => state.user.status;
 export const selectLoggedUser = (state) => state.user.loggedUser;

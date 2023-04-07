@@ -72,7 +72,7 @@ function Login() {
             const logindata = {
                 any: document.getElementById(control.loginany.id).value,
                 password: document.getElementById(control.loginpassword.id).value,
-                remember: document.getElementById(control.loginremember.id).value
+                remember: document.getElementById(control.loginremember.id).checked
             };
             dispatch(loginAsync(logindata)).then((action) => {
                 console.log(action)

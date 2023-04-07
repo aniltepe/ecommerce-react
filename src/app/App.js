@@ -14,6 +14,7 @@ import { getCountryAsync, getLangAsync, getRegionsAsync, getLangsAsync, getCount
 import { selectCurrTheme } from '../slices/uiSlice';
 import themes from './themes';
 import TestPage from '../pages/TestPage';
+import { authAsync, setLoggedUser } from '../slices/userSlice';
 
 function App() {
   console.log("inside App func");
@@ -22,10 +23,17 @@ function App() {
 
   useEffect(() => {
     const settings = (navigator.language || navigator.userLanguage).split("-");
-    const initLangCode = settings[0].toLowerCase();
-    const initCountryCode = settings.length > 1 ? settings[1] : settings[0].toUpperCase();
-    dispatch(getLangAsync(initLangCode));
-    dispatch(getCountryAsync(initCountryCode));
+    let initLangCode = settings[0].toLowerCase();
+    let initCountryCode = settings.length > 1 ? settings[1] : settings[0].toUpperCase();
+    dispatch(authAsync()).then((action) => {
+      if (action.payload.status === 200) {
+        dispatch(setLoggedUser(action.payload.data));
+        initLangCode = action.payload.data.language;
+        initCountryCode = action.payload.data.country;
+      }
+      dispatch(getLangAsync(initLangCode));
+      dispatch(getCountryAsync(initCountryCode));
+    });
     dispatch(getRegionsAsync());
     dispatch(getLangsAsync());
     dispatch(getCountriesAsync());
